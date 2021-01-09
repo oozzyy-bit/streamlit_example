@@ -16,3 +16,5 @@ st.line_chart(ticker_df.Close)
 
 st.write("""## Volume""")
 st.line_chart(ticker_df.Volume)
+
+
