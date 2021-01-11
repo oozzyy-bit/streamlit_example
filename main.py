@@ -54,7 +54,7 @@ f.update_xaxes(title="Fiyat")
 f.update_yaxes(title="İlan Sayısı")
 st.plotly_chart(f)
 
-st.header("Bölgelere göre boşluluk-doluluk oranı?")
+st.header("Bölgelere göre boş oda oranı?")
 
 neighborhood = st.radio("Bölgeler listesi:", df.neighbourhood.unique())
 show_exp = st.checkbox("Pahalı olanlarıda göster.")
@@ -70,35 +70,21 @@ st.table(get_availability(show_exp, neighborhood))
 
 
 df.query("availability_365>0").groupby("neighbourhood_group")\
-    .availability_365.mean().plot.bar(rot=0).set(title="Average availability by neighborhood group",
-        xlabel="Neighborhood group", ylabel="Avg. availability (in no. of days)")
+    .availability_365.mean().plot.bar(rot=0).set(title="Bölgelerin Ortalama Boş Oda Sayısı.",
+        xlabel="Bölge ismi", ylabel="Ortalama Boş Oda Sayısı)
 st.pyplot()
 
-st.header("Properties by number of reviews")
-st.write("Enter a range of numbers in the sidebar to view properties whose review count falls in that range.")
+st.header("İlan bazında yorum sayısı.")
+st.write("Sol tarafran bir aralık seçin.")
 minimum = st.sidebar.number_input("Minimum", min_value=0)
 maximum = st.sidebar.number_input("Maximum", min_value=0, value=5)
 if minimum > maximum:
-    st.error("Please enter a valid range")
+    st.error("Lütfen mantıklı bir aralık girin!")
 else:
     df.query("@minimum<=number_of_reviews<=@maximum").sort_values("number_of_reviews", ascending=False)\
         .head(50)[["name", "number_of_reviews", "neighbourhood", "host_name", "room_type", "price"]]
 
-st.write("486 is the highest number of reviews and two properties have it. Both are in the East Elmhurst \
-    neighborhood and are private rooms with prices $65 and $45. \
-    In general, listings with >400 reviews are priced below $100. \
-    A few are between $100 and $200, and only one is priced above $200.")
-st.header("Images")
-pics = {
-    "Cat": "https://cdn.pixabay.com/photo/2016/09/24/22/20/cat-1692702_960_720.jpg",
-    "Puppy": "https://cdn.pixabay.com/photo/2019/03/15/19/19/puppy-4057786_960_720.jpg",
-    "Sci-fi city": "https://storage.needpix.com/rsynced_images/science-fiction-2971848_1280.jpg"
-}
-pic = st.selectbox("Picture choices", list(pics.keys()), 0)
-st.image(pics[pic], use_column_width=True, caption=pics[pic])
 
-st.markdown("## Party time!")
-st.write("Yay! You're done with this tutorial of Streamlit. Click below to celebrate.")
 btn = st.button("Celebrate!")
 if btn:
     st.balloons()
