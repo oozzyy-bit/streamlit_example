@@ -62,16 +62,14 @@ show_exp = " and price<200" if not show_exp else ""
 
 @st.cache
 def get_availability(show_exp, neighborhood):
-    return df.query(f"""neighbourhood_group==@neighborhood{show_exp}\
+    return df.query(f"""neighbourhood==@neighborhood{show_exp}\
         and availability_365>0""").availability_365.describe(\
             percentiles=[.1, .25, .5, .75, .9, .99]).to_frame().T
 
 st.table(get_availability(show_exp, neighborhood))
 
 
-df.query("availability_365>0").groupby("neighbourhood_group")\
-    .availability_365.mean().plot.bar(rot=0).set(title="Bölgelerin Ortalama Boş Oda Sayısı.",
-        xlabel="Bölge ismi", ylabel="Ortalama Boş Oda Sayısı")
+df.query("availability_365>0").groupby("neighbourhood").availability_365.mean().plot.bar(rot=0).set(title="Bölgelerin Ortalama Boş Oda Sayısı.", xlabel="Bölge ismi", ylabel="Ortalama Boş Oda Sayısı")
 st.pyplot()
 
 st.header("İlan bazında yorum sayısı.")
