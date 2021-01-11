@@ -1,6 +1,8 @@
 import pandas as pd
 import streamlit as st
 import plotly.express as px
+import matplotlib
+import matplolib.pyplot as
 
 @st.cache
 def get_data():
@@ -33,9 +35,9 @@ st.header("En çok ilanı olan ev sahibi.")
 listingcounts = df.host_id.value_counts()
 top_host_1 = df.query('host_id==@listingcounts.index[0]')
 top_host_2 = df.query('host_id==@listingcounts.index[1]')
-st.write(f"""**{top_host_1.iloc[0].host_name}** is at the top with {listingcounts.iloc[0]} property listings.
-**{top_host_2.iloc[1].host_name}** is second with {listingcounts.iloc[1]} listings. Following are randomly chosen
-listings from the two displayed as JSON using [`st.json`](https://streamlit.io/docs/api.html#streamlit.json).""")
+st.write(f"""**{top_host_1.iloc[0].host_name}**, {listingcounts.iloc[0]} ilan ile birinci sırada.
+**{top_host_2.iloc[1].host_name}**, {listingcounts.iloc[1]} ilan ile ikinci sırada.
+Aşağıda JSON formatında bu 2 ev sahibinin rastgele seçilmiş bir ilanlarının bilgileri mevcut. [`st.json`](https://streamlit.io/docs/api.html#streamlit.json).""")
 
 st.json({top_host_1.iloc[0].host_name: top_host_1\
     [["name", "neighbourhood", "room_type", "minimum_nights", "price"]]\
@@ -54,7 +56,7 @@ st.plotly_chart(f)
 
 st.header("Bölgelere göre boşluluk-doluluk oranı?")
 
-neighborhood = st.radio("Bölgeler listesi:", df.neighbourhood_group.unique())
+neighborhood = st.radio("Bölgeler listesi:", df.neighbourhood.unique())
 show_exp = st.checkbox("Pahalı olanlarıda göster.")
 show_exp = " and price<200" if not show_exp else ""
 
@@ -65,9 +67,7 @@ def get_availability(show_exp, neighborhood):
             percentiles=[.1, .25, .5, .75, .9, .99]).to_frame().T
 
 st.table(get_availability(show_exp, neighborhood))
-st.write("At 169 days, Brooklyn has the lowest average availability. At 226, Staten Island has the highest average availability.\
-    If we include expensive listings (price>=$200), the numbers are 171 and 230 respectively.")
-st.markdown("_**Note:** There are 18431 records with `availability_365` 0 (zero), which I've ignored._")
+
 
 df.query("availability_365>0").groupby("neighbourhood_group")\
     .availability_365.mean().plot.bar(rot=0).set(title="Average availability by neighborhood group",
