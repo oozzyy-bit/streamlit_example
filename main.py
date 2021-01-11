@@ -71,7 +71,7 @@ st.table(get_availability(show_exp, neighborhood))
 
 df.query("availability_365>0").groupby("neighbourhood_group")\
     .availability_365.mean().plot.bar(rot=0).set(title="Bölgelerin Ortalama Boş Oda Sayısı.",
-        xlabel="Bölge ismi", ylabel="Ortalama Boş Oda Sayısı)
+        xlabel="Bölge ismi", ylabel="Ortalama Boş Oda Sayısı")
 st.pyplot()
 
 st.header("İlan bazında yorum sayısı.")
@@ -85,6 +85,6 @@ else:
         .head(50)[["name", "number_of_reviews", "neighbourhood", "host_name", "room_type", "price"]]
 
 
-btn = st.button("Celebrate!")
+btn = st.button("Sakın Bana Basma!")
 if btn:
     st.balloons()
